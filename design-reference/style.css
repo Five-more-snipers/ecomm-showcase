@@ -1,0 +1,245 @@
+/*
+Theme Name: Ecommerce Marketplace
+Theme URI: https://www.theclassictemplates.com/products/ecommerce-marketplace
+Author: classictemplate
+Author URI: https://www.theclassictemplates.com/
+Description: Build a powerful ecommerce Marketplace website with a modern WordPress solution designed for online shop owners, growing store brands, and large retail businesses. Create a complete shopping platform where every vendor, seller, and buyer can connect easily. Showcase every product with a clean catalog, smart listing, and user-friendly search experience. Enable smooth cart, secure checkout, and trusted payment options for better customer satisfaction. Whether you are a small merchant, large wholesale supplier, or startup launching a dropshipping business, this theme supports all business models. Sell physical goods or digital downloads with ease and expand your online commerce presence. Manage inventory, orders, customers, and reports from one dashboard. Create a professional multivendor platform where many sellers can add products and grow together. Highlight seasonal deals, special offers, and flash sales to increase conversions. This responsive and SEO-friendly WordPress theme is ideal for startups, entrepreneurs, online stores, and marketplace businesses looking for speed, style, and performance. Launch your ecommerce Marketplace today and grow your revenue with confidence.
+Template: classic-ecommerce
+Version: 0.0.6
+Tested up to: 7.0
+Requires PHP: 5.6
+Requires at least: 5.0
+License: GNU General Public License
+License URI: http://www.gnu.org/licenses/gpl.html
+Text Domain: ecommerce-marketplace
+Tags: blog, e-commerce, photography, one-column, two-columns, three-columns, four-columns, grid-layout, left-sidebar, right-sidebar, custom-logo, post-formats, featured-images, full-width-template, custom-colors, editor-style, flexible-header, footer-widgets, wide-blocks, custom-header, translation-ready, custom-background, custom-menu, sticky-post, threaded-comments, rtl-language-support, theme-options
+
+Ecommerce Marketplace WordPress Theme has been created by classictemplate (theclassictemplates.com), 2026.
+Ecommerce Marketplace WordPress Theme is released under the terms of GNU GPL
+
+Ecommerce Marketplace WordPress Theme is child theme of Classic Ecommerce WordPress Theme, Copyright 2022 classictemplate (theclassictemplates.com)
+Ecommerce Marketplace WordPress Theme is distributed under the terms of the GNU GPL
+*/
+body {
+  color: #222;
+}
+.topbar-text {
+  display: flex;
+  justify-content: space-between;
+}
+.product-account i, .product-cart i {
+  color: #000;
+}
+.slider-box p.discount-text {
+  font-family: "Satisfy";
+  font-size: 20px;
+  position: relative;
+  display: inline-block;
+}
+.slider-box p.discount-text:after {
+  content: '';
+  width: 80%;
+  height: 1px;
+  background: #252525;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: -83%;
+}
+.slider-box strong.subhead-text {
+  display: block;
+  margin: 15px 0;
+  font-size: 18px;
+  color: #222222;
+}
+.slider-box h1 a {
+  text-transform: capitalize;
+  font-weight: 700;
+  letter-spacing: 0;
+  font-size: 50px;
+}
+.slider-box h1 {
+  margin-bottom: 10px;
+}
+.slider-box p {
+  font-family: "Oswald";
+  font-size: 15px;
+  font-weight: 300;
+}
+.shop-now a:hover {
+  background: #222;
+  color: #ffffff;
+}
+.catwrapslider .owl-prev, .catwrapslider .owl-next {
+  left: auto;
+  right: 5%;
+  top: 55%;
+  border-radius: 4px;
+}
+.catwrapslider .owl-next {
+  top: 48%;
+}
+.shop-now a {
+  border: 1px solid;
+  font-family: "Inter";
+  border-radius: 5px;
+}
+#recent-product {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  position: relative;
+}
+#recent-product h2 {
+  margin: 0;
+}
+a.view-btn {
+  border: 1px solid #252525;
+  display: inline-block;
+  padding: 8px 25px;
+  border-radius: 5px;
+  color: #252525;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+#recent-product h2 {
+  text-transform: capitalize;
+  letter-spacing: 0;
+}
+.woocommerce ul.products li.product, .woocommerce-cart .wp-block-woocommerce-empty-cart-block li.wc-block-grid__product {
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  text-align: left !important;
+  position: relative;
+}
+.slider-box h1 a:hover {
+  color: #000;
+}
+.woocommerce ul.products li.product a img {
+  border-radius: 0 !important;
+}
+.woocommerce ul.products li.product .onsale{
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  line-height: 1;
+  min-width: max-content;
+  padding: 10px;
+  letter-spacing: 5px;
+  font-weight: 500;
+}
+.woocommerce ul.products li.product .add_to_cart_button, .woocommerce a.added_to_cart {
+  text-indent: -9999px;
+  background: url('./images/cart.png') no-repeat center center !important;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background-color: #222222 !important;
+  border-radius: 50% !important;
+  border: 0 !important;
+  padding: 12px 20px !important;
+  margin: 0 !important;
+}
+.woocommerce ul.products li.product a.added_to_cart {
+  background: url('./images/eye.png') no-repeat center center !important;
+  background-color: #222222 !important;
+  z-index: 999;
+  padding: 10px 21px !important;
+}
+.woocommerce .quantity .qty {
+  border-radius: 3px !important;
+}
+.woocommerce ul.products li.product .price, .woocommerce div.product p.price, .woocommerce div.product span.price {
+  color: #222 !important;
+}
+.woocommerce ul.products li.product .price {
+  margin-left: 50px;
+  margin-top: 15px;
+  color: #797979 !important;
+  font-family: "Inter";
+}
+.woocommerce ul.products li.product .price ins {
+  font-weight: 500;
+  color: #222;
+}
+.woocommerce ul.products li.product h2.woocommerce-loop-product__title {
+  font-size: 20px !important;
+  font-weight: 400;
+}
+#recent-product:after {
+  content: '';
+  width: 60%;
+  height: 1px;
+  background: #D5D4D4;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10%;
+}
+.woocommerce #review_form #respond .form-submit input {
+  background: var(--first-theme-color);
+  color: #252525;
+}
+.woocommerce #review_form #respond .form-submit input:hover {
+  background: #252525;
+  color: #fff;
+}
+.nav-links a {
+  color: #252525;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+@media screen and (max-width: 1000px) {
+  .logo {
+    text-align: left !important;
+  }
+}
+@media screen and (max-width: 575px) {
+  .logo {
+    text-align: center !important;
+  }
+  .product-search button[type="submit"] {
+    width: auto !important;
+    padding: 15px 12px;
+  }
+  .slider-box h1 a {
+    font-size: 30px;
+  }
+  .catwrapslider .owl-prev, .catwrapslider .owl-next {
+    top: auto !important;
+    left: 55% !important;
+    transform: translateX(-50%); !important;
+    border: 0 !important;
+    padding: 0 !important;
+  }
+  .catwrapslider .owl-prev:hover, .catwrapslider .owl-next:hover {
+    background: transparent !important;
+  }
+  .catwrapslider .owl-prev {
+    left: 48% !important;
+  }
+  .catwrapslider .owl-dots {
+    display: none;
+  }
+  #recent-product {
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+    justify-content: center;
+  }
+  #recent-product:after {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40%;
+  }
+  a.view-btn {
+    width: max-content;
+    flex-basis: max-content;
+    margin: 0 auto;
+  }
+  .category-dropdown {
+    width: 90%;
+  }
+}

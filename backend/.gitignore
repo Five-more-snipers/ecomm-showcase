@@ -1,0 +1,27 @@
+# Maven Target
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.settings/
+.project
+.classpath
+.nb-gradle/
+nbproject/
+
+# Logs
+*.log
+
+# Database files (H2)
+*.mv.db
+*.trace.db
+
+# OS files
+.DS_Store
+Thumbs.db

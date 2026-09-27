@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Satisfy&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-yellow: #f8e05d;
+  --primary-black: #222222;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: #222222;
+  background-color: #ffffff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Vertical Upright SALE Badge - Exactly as in reference WordPress theme style.css */
+.onsale-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  line-height: 1;
+  min-width: max-content;
+  padding: 10px 6px;
+  letter-spacing: 5px;
+  font-weight: 700;
+  font-size: 11px;
+  background-color: #222222;
+  color: #ffffff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+/* Discount script line */
+.discount-text-line {
+  position: relative;
+  display: inline-block;
+}
+
+.discount-text-line::after {
+  content: '';
+  width: 70px;
+  height: 1px;
+  background: #222222;
+  position: absolute;
+  top: 55%;
+  right: -80px;
+}
+
+/* Container */
+.site-container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}

@@ -1,0 +1,24 @@
+services:
+  oracle-db:
+    image: gvenzl/oracle-free:23-slim
+    container_name: ecomm-oracle-23c
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_PASSWORD: sys_password_123
+      APP_USER: ecomm_user
+      APP_USER_PASSWORD: ecomm_password
+      ORACLE_DATABASE: FREEPDB1
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD-SHELL", "healthcheck.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  oracle_data:
+    driver: local
