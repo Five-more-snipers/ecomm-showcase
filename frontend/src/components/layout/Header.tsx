@@ -14,8 +14,7 @@ import {
   Sparkles,
   LogOut,
   Shield,
-  LayoutDashboard,
-  CheckCircle,
+  LayoutDashboard
 } from 'lucide-react';
 import { useCartStore } from '@/stores/useCartStore';
 import { useSimulatorStore } from '@/stores/useSimulatorStore';
@@ -28,8 +27,6 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
-
-  if (pathname?.startsWith('/admin')) return null;
 
   const { cartId, openCart } = useCartStore();
   const { simulationMode, setSimulationMode } = useSimulatorStore();
@@ -112,6 +109,8 @@ export default function Header() {
     }
   };
 
+  if (pathname?.startsWith('/admin')) return null;
+
   return (
     <header className="w-full relative z-40">
       {/* 1. Black Main Menu Bar */}
@@ -121,7 +120,7 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-2 cursor-pointer group">
             <div className="flex items-center gap-1">
               <span className="text-market-yellow text-2xl font-black tracking-tighter group-hover:scale-110 transition-transform">
-                ///
+                {'///'}
               </span>
               <span className="text-white text-xl font-extrabold tracking-wider uppercase font-heading">
                 ECOMMERCE <span className="text-market-yellow">SHOP</span>
@@ -135,11 +134,10 @@ export default function Header() {
               <Link
                 key={link.label}
                 href={link.href}
-                className={`transition pb-1 ${
-                  isLinkActive(link.href)
+                className={`transition pb-1 ${isLinkActive(link.href)
                     ? 'text-market-yellow font-bold border-b-2 border-market-yellow'
                     : 'text-gray-200 hover:text-market-yellow'
-                }`}
+                  }`}
               >
                 {link.label}
               </Link>
@@ -164,11 +162,10 @@ export default function Header() {
                 key={link.label}
                 href={link.href}
                 onClick={() => setIsMobileNavOpen(false)}
-                className={`block text-sm py-1.5 transition ${
-                  isLinkActive(link.href)
+                className={`block text-sm py-1.5 transition ${isLinkActive(link.href)
                     ? 'text-market-yellow font-bold'
                     : 'text-gray-200 hover:text-market-yellow'
-                }`}
+                  }`}
               >
                 {link.label}
               </Link>
@@ -224,11 +221,10 @@ export default function Header() {
               <div className="absolute top-full left-0 mt-1 w-60 bg-white border border-gray-200 shadow-xl rounded z-50 py-2">
                 <button
                   onClick={() => handleCategorySelect('')}
-                  className={`w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-market-yellowLight transition ${
-                    selectedCategory === ''
+                  className={`w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-market-yellowLight transition ${selectedCategory === ''
                       ? 'bg-market-yellowLight font-bold text-market-black'
                       : 'text-gray-700'
-                  }`}
+                    }`}
                 >
                   All Categories
                 </button>
@@ -236,11 +232,10 @@ export default function Header() {
                   <button
                     key={c.id}
                     onClick={() => handleCategorySelect(c.slug)}
-                    className={`w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-market-yellowLight transition ${
-                      selectedCategory === c.slug
+                    className={`w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-market-yellowLight transition ${selectedCategory === c.slug
                         ? 'bg-market-yellowLight font-bold text-market-black'
                         : 'text-gray-700'
-                    }`}
+                      }`}
                   >
                     {c.name}
                   </button>

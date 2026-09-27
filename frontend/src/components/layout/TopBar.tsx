@@ -11,8 +11,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function TopBar() {
   const pathname = usePathname();
-  if (pathname?.startsWith('/admin')) return null;
-
   const simulationMode = useSimulatorStore((s) => s.simulationMode);
   const openOrderModal = useSimulatorStore((s) => s.openOrderModal);
   const activeOrderNumber = useSimulatorStore((s) => s.activeOrderNumber);
@@ -38,6 +36,8 @@ export default function TopBar() {
       openOrderModal(input.trim());
     }
   };
+
+  if (pathname?.startsWith('/admin')) return null;
 
   return (
     <div className="bg-market-yellow text-market-black py-2 text-xs font-semibold border-b border-market-yellowDark">

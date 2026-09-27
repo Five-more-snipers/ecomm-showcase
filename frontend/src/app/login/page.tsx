@@ -147,11 +147,10 @@ export default function LoginPage() {
                 setActiveTab('signin');
                 setErrorMessage(null);
               }}
-              className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider transition border-b-2 ${
-                activeTab === 'signin'
+              className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider transition border-b-2 ${activeTab === 'signin'
                   ? 'border-market-yellow text-market-yellow'
                   : 'border-transparent text-gray-400 hover:text-gray-200'
-              }`}
+                }`}
             >
               Sign In
             </button>
@@ -160,11 +159,10 @@ export default function LoginPage() {
                 setActiveTab('signup');
                 setErrorMessage(null);
               }}
-              className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider transition border-b-2 ${
-                activeTab === 'signup'
+              className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider transition border-b-2 ${activeTab === 'signup'
                   ? 'border-market-yellow text-market-yellow'
                   : 'border-transparent text-gray-400 hover:text-gray-200'
-              }`}
+                }`}
             >
               Create Account
             </button>

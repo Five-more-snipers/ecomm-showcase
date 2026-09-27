@@ -32,7 +32,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Year;
-import java.util.*;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -123,7 +128,7 @@ public class CheckoutService {
         // 8. Generate Order
         String orderId = UUID.randomUUID().toString();
         long orderSeq = orderRepository.countOrders() + 1;
-        String orderNumber = String.format("ORD-%d-%06d", Year.now().getValue(), orderSeq);
+        String orderNumber = String.format("ORD-%d-%06d", Year.now(ZoneOffset.UTC).getValue(), orderSeq);
 
         Order order = Order.builder()
                 .id(orderId)

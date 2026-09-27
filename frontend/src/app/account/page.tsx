@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   User as UserIcon,
-  Shield,
   ShieldCheck,
   Package,
   MapPin,
@@ -19,13 +18,22 @@ import {
   ExternalLink,
   ShoppingBag,
   Clock,
-  Sparkles,
   ArrowRight,
 } from 'lucide-react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAdminOrders } from '@/lib/api';
-import { Order, OrderItem, UserRole } from '@/types';
+import { Order, OrderItem, OrderStatus, UserRole } from '@/types';
+
+function getOrderStatusBadgeClass(status: OrderStatus): string {
+  if (status === 'DELIVERED' || status === 'SHIPPED' || status === 'PAYMENT_CONFIRMED') {
+    return 'bg-green-100 text-green-800';
+  }
+  if (status === 'CANCELLED' || status === 'PAYMENT_FAILED') {
+    return 'bg-red-100 text-red-800';
+  }
+  return 'bg-blue-100 text-blue-800';
+}
 
 export default function AccountPage() {
   const router = useRouter();
@@ -119,6 +127,90 @@ export default function AccountPage() {
           label: 'Verified Customer',
         };
     }
+  };
+
+  const renderOrdersContent = () => {
+    if (isLoadingOrders) {
+      return <div className="py-12 text-center text-xs text-gray-400">Loading orders...</div>;
+    }
+
+    if (displayOrders.length === 0) {
+      return (
+        <div className="py-12 text-center">
+          <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 text-gray-400">
+            <Package size={24} />
+          </div>
+          <h3 className="font-bold text-sm text-gray-800 mb-1">No orders placed yet</h3>
+          <p className="text-xs text-gray-500 mb-4 max-w-sm mx-auto">
+            Add products from the catalog and experience our concurrency-safe simulated checkout!
+          </p>
+          <Link
+            href="/catalog"
+            className="inline-flex items-center gap-1.5 bg-market-yellow hover:bg-market-yellowDark text-market-black font-bold text-xs px-4 py-2 rounded transition"
+          >
+            <span>Browse Product Catalog</span>
+            <ArrowRight size={13} />
+          </Link>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-4">
+        {displayOrders.map((order: Order) => (
+          <div
+            key={order.orderId || order.orderNumber}
+            className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-gray-100 text-xs">
+              <div className="flex items-center gap-2">
+                <span className="font-mono font-bold text-gray-900">
+                  #{order.orderNumber}
+                </span>
+                <span
+                  className={`px-2 py-0.5 rounded font-bold uppercase text-[10px] ${getOrderStatusBadgeClass(
+                    order.status
+                  )}`}
+                >
+                  {order.status}
+                </span>
+              </div>
+              <div className="text-gray-500 flex items-center gap-1 text-[11px]">
+                <Clock size={12} />
+                <span>{new Date(order.createdAt).toLocaleDateString()}</span>
+              </div>
+            </div>
+
+            <div className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="text-xs font-semibold text-gray-800">
+                  {order.items?.length || 1} item(s) ordered
+                </div>
+                <div className="text-[11px] text-gray-500">
+                  Delivered to: {order.customerName} ({order.shippingAddress || 'Showcase Address'})
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-xs text-gray-500">Total Paid</div>
+                <div className="text-base font-extrabold text-market-black">
+                  ${Number(order.total || 0).toFixed(2)}
+                </div>
+              </div>
+            </div>
+
+            {order.items && order.items.length > 0 && (
+              <div className="pt-2 border-t border-gray-50 text-[11px] text-gray-500 flex flex-wrap gap-2">
+                {order.items.map((item: OrderItem) => (
+                  <span key={item.id} className="bg-gray-100 px-2 py-0.5 rounded">
+                    {item.title} &times; {item.quantity}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
   };
 
   const roleInfo = getRoleBadge(currentUser.role);
@@ -280,8 +372,11 @@ export default function AccountPage() {
               {isEditing ? (
                 <form onSubmit={handleSaveProfile} className="space-y-3 text-xs">
                   <div>
-                    <label className="block font-semibold text-gray-700 mb-1">Full Name</label>
+                    <label htmlFor="profile-fullname" className="block font-semibold text-gray-700 mb-1">
+                      Full Name
+                    </label>
                     <input
+                      id="profile-fullname"
                       type="text"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
@@ -290,8 +385,11 @@ export default function AccountPage() {
                     />
                   </div>
                   <div>
-                    <label className="block font-semibold text-gray-700 mb-1">Phone Number</label>
+                    <label htmlFor="profile-phone" className="block font-semibold text-gray-700 mb-1">
+                      Phone Number
+                    </label>
                     <input
+                      id="profile-phone"
                       type="text"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
@@ -300,8 +398,11 @@ export default function AccountPage() {
                     />
                   </div>
                   <div>
-                    <label className="block font-semibold text-gray-700 mb-1">Street Address</label>
+                    <label htmlFor="profile-address" className="block font-semibold text-gray-700 mb-1">
+                      Street Address
+                    </label>
                     <input
+                      id="profile-address"
                       type="text"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
@@ -311,8 +412,11 @@ export default function AccountPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block font-semibold text-gray-700 mb-1">City</label>
+                      <label htmlFor="profile-city" className="block font-semibold text-gray-700 mb-1">
+                        City
+                      </label>
                       <input
+                        id="profile-city"
                         type="text"
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
@@ -321,8 +425,11 @@ export default function AccountPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-semibold text-gray-700 mb-1">Postal Code</label>
+                      <label htmlFor="profile-postalcode" className="block font-semibold text-gray-700 mb-1">
+                        Postal Code
+                      </label>
                       <input
+                        id="profile-postalcode"
                         type="text"
                         value={postalCode}
                         onChange={(e) => setPostalCode(e.target.value)}
@@ -391,85 +498,7 @@ export default function AccountPage() {
                 </Link>
               </div>
 
-              {isLoadingOrders ? (
-                <div className="py-12 text-center text-xs text-gray-400">Loading orders...</div>
-              ) : displayOrders.length === 0 ? (
-                <div className="py-12 text-center">
-                  <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 text-gray-400">
-                    <Package size={24} />
-                  </div>
-                  <h3 className="font-bold text-sm text-gray-800 mb-1">No orders placed yet</h3>
-                  <p className="text-xs text-gray-500 mb-4 max-w-sm mx-auto">
-                    Add products from the catalog and experience our concurrency-safe simulated checkout!
-                  </p>
-                  <Link
-                    href="/catalog"
-                    className="inline-flex items-center gap-1.5 bg-market-yellow hover:bg-market-yellowDark text-market-black font-bold text-xs px-4 py-2 rounded transition"
-                  >
-                    <span>Browse Product Catalog</span>
-                    <ArrowRight size={13} />
-                  </Link>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {displayOrders.map((order: Order) => (
-                    <div
-                      key={order.orderId || order.orderNumber}
-                      className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-gray-100 text-xs">
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-gray-900">
-                            #{order.orderNumber}
-                          </span>
-                          <span
-                            className={`px-2 py-0.5 rounded font-bold uppercase text-[10px] ${
-                              order.status === 'DELIVERED' || order.status === 'SHIPPED' || order.status === 'PAYMENT_CONFIRMED'
-                                ? 'bg-green-100 text-green-800'
-                                : order.status === 'CANCELLED' || order.status === 'PAYMENT_FAILED'
-                                ? 'bg-red-100 text-red-800'
-                                : 'bg-blue-100 text-blue-800'
-                            }`}
-                          >
-                            {order.status}
-                          </span>
-                        </div>
-                        <div className="text-gray-500 flex items-center gap-1 text-[11px]">
-                          <Clock size={12} />
-                          <span>{new Date(order.createdAt).toLocaleDateString()}</span>
-                        </div>
-                      </div>
-
-                      <div className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div className="space-y-1">
-                          <div className="text-xs font-semibold text-gray-800">
-                            {order.items?.length || 1} item(s) ordered
-                          </div>
-                          <div className="text-[11px] text-gray-500">
-                            Delivered to: {order.customerName} ({order.shippingAddress || 'Showcase Address'})
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-xs text-gray-500">Total Paid</div>
-                          <div className="text-base font-extrabold text-market-black">
-                            ${Number(order.total || 0).toFixed(2)}
-                          </div>
-                        </div>
-                      </div>
-
-                      {order.items && order.items.length > 0 && (
-                        <div className="pt-2 border-t border-gray-50 text-[11px] text-gray-500 flex flex-wrap gap-2">
-                          {order.items.map((item: OrderItem, idx: number) => (
-                            <span key={idx} className="bg-gray-100 px-2 py-0.5 rounded">
-                              {item.title} &times; {item.quantity}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
+              {renderOrdersContent()}
             </div>
           </div>
         </div>

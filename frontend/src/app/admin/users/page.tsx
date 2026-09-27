@@ -3,19 +3,14 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
-  Users,
   UserPlus,
-  Shield,
   ShieldAlert,
   Trash2,
   CheckCircle,
   AlertTriangle,
   Search,
-  UserCheck,
-  Mail,
   Lock,
   ArrowLeft,
-  Sparkles,
 } from 'lucide-react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { UserRole } from '@/types';
@@ -190,11 +185,10 @@ export default function AdminUsersPage() {
       {/* Global Feedback Banner */}
       {actionFeedback && (
         <div
-          className={`border-l-4 p-3 rounded text-xs flex items-center justify-between shadow-sm animate-in fade-in duration-150 ${
-            actionFeedback.success
+          className={`border-l-4 p-3 rounded text-xs flex items-center justify-between shadow-sm animate-in fade-in duration-150 ${actionFeedback.success
               ? 'bg-[#f0f6fc] border-[#00a32a] text-[#1d2327]'
               : 'bg-[#fcf0f1] border-[#d63638] text-[#d63638]'
-          }`}
+            }`}
         >
           <div className="flex items-center gap-2">
             {actionFeedback.success ? (
@@ -217,11 +211,10 @@ export default function AdminUsersPage() {
 
           {formFeedback && (
             <div
-              className={`mb-4 p-3 rounded text-xs border-l-4 ${
-                formFeedback.success
+              className={`mb-4 p-3 rounded text-xs border-l-4 ${formFeedback.success
                   ? 'bg-green-50 border-green-600 text-green-900'
                   : 'bg-red-50 border-red-600 text-red-900'
-              }`}
+                }`}
             >
               {formFeedback.message}
             </div>
@@ -230,10 +223,11 @@ export default function AdminUsersPage() {
           <form onSubmit={handleCreateUser} className="space-y-4 max-w-2xl text-xs">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[#1d2327] font-semibold mb-1">
+                <label htmlFor="new-user-fullname" className="block text-[#1d2327] font-semibold mb-1">
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="new-user-fullname"
                   type="text"
                   required
                   placeholder="e.g. Jordan Smith"
@@ -244,10 +238,11 @@ export default function AdminUsersPage() {
               </div>
 
               <div>
-                <label className="block text-[#1d2327] font-semibold mb-1">
+                <label htmlFor="new-user-email" className="block text-[#1d2327] font-semibold mb-1">
                   Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="new-user-email"
                   type="email"
                   required
                   placeholder="e.g. jsmith@example.com"
@@ -258,10 +253,11 @@ export default function AdminUsersPage() {
               </div>
 
               <div>
-                <label className="block text-[#1d2327] font-semibold mb-1">
+                <label htmlFor="new-user-password" className="block text-[#1d2327] font-semibold mb-1">
                   Initial Password <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="new-user-password"
                   type="password"
                   required
                   placeholder="Min 6 characters (will be salted SHA-256 hashed)"
@@ -272,10 +268,11 @@ export default function AdminUsersPage() {
               </div>
 
               <div>
-                <label className="block text-[#1d2327] font-semibold mb-1">
+                <label htmlFor="new-user-role" className="block text-[#1d2327] font-semibold mb-1">
                   Role <span className="text-red-500">*</span>
                 </label>
                 <select
+                  id="new-user-role"
                   value={newRole}
                   onChange={(e) => setNewRole(e.target.value as UserRole)}
                   className="w-full border border-[#8c8f94] rounded px-3 py-1.5 outline-none focus:border-[#2271b1] bg-white cursor-pointer font-medium"
@@ -287,8 +284,9 @@ export default function AdminUsersPage() {
               </div>
 
               <div>
-                <label className="block text-[#1d2327] font-semibold mb-1">Phone Number (optional)</label>
+                <label htmlFor="new-user-phone" className="block text-[#1d2327] font-semibold mb-1">Phone Number (optional)</label>
                 <input
+                  id="new-user-phone"
                   type="text"
                   placeholder="+1-555-0199"
                   value={newPhone}
@@ -298,8 +296,9 @@ export default function AdminUsersPage() {
               </div>
 
               <div>
-                <label className="block text-[#1d2327] font-semibold mb-1">City / Region (optional)</label>
+                <label htmlFor="new-user-city" className="block text-[#1d2327] font-semibold mb-1">City / Region (optional)</label>
                 <input
+                  id="new-user-city"
                   type="text"
                   placeholder="Seattle, WA"
                   value={newCity}
@@ -456,11 +455,10 @@ export default function AdminUsersPage() {
                           <button
                             onClick={() => handleDeleteUser(user)}
                             disabled={isCurrentSelf}
-                            className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs transition ${
-                              isCurrentSelf
+                            className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs transition ${isCurrentSelf
                                 ? 'text-gray-300 cursor-not-allowed'
                                 : 'text-[#b32d2e] hover:bg-red-50 hover:text-red-700 font-medium'
-                            }`}
+                              }`}
                             title={isCurrentSelf ? 'Cannot delete self' : 'Permanently remove account'}
                           >
                             <Trash2 size={13} />
