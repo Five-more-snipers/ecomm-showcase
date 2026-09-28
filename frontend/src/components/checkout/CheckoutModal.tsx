@@ -193,8 +193,9 @@ export default function CheckoutModal() {
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">Full Name</label>
+                <label htmlFor="checkout-customer-name" className="block text-gray-700 font-semibold mb-1">Full Name</label>
                 <input
+                  id="checkout-customer-name"
                   type="text"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
@@ -203,8 +204,9 @@ export default function CheckoutModal() {
               </div>
 
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">Email Address</label>
+                <label htmlFor="checkout-customer-email" className="block text-gray-700 font-semibold mb-1">Email Address</label>
                 <input
+                  id="checkout-customer-email"
                   type="email"
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
@@ -213,8 +215,9 @@ export default function CheckoutModal() {
               </div>
 
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">Street Address</label>
+                <label htmlFor="checkout-shipping-address" className="block text-gray-700 font-semibold mb-1">Street Address</label>
                 <input
+                  id="checkout-shipping-address"
                   type="text"
                   value={shippingAddress}
                   onChange={(e) => setShippingAddress(e.target.value)}
@@ -224,8 +227,9 @@ export default function CheckoutModal() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-1">City</label>
+                  <label htmlFor="checkout-shipping-city" className="block text-gray-700 font-semibold mb-1">City</label>
                   <input
+                    id="checkout-shipping-city"
                     type="text"
                     value={shippingCity}
                     onChange={(e) => setShippingCity(e.target.value)}
@@ -233,8 +237,9 @@ export default function CheckoutModal() {
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-1">Postal Code</label>
+                  <label htmlFor="checkout-shipping-postal" className="block text-gray-700 font-semibold mb-1">Postal Code</label>
                   <input
+                    id="checkout-shipping-postal"
                     type="text"
                     value={shippingPostalCode}
                     onChange={(e) => setShippingPostalCode(e.target.value)}
@@ -281,8 +286,9 @@ export default function CheckoutModal() {
             {paymentMethod === 'MOCK_CREDIT_CARD' && (
               <div className="space-y-3 mb-4 text-xs">
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-1">Card Number</label>
+                  <label htmlFor="checkout-card-number" className="block text-gray-700 font-semibold mb-1">Card Number</label>
                   <input
+                    id="checkout-card-number"
                     type="text"
                     value={cardNumber}
                     onChange={(e) => setCardNumber(e.target.value)}
@@ -291,8 +297,9 @@ export default function CheckoutModal() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-1">Expiry</label>
+                    <label htmlFor="checkout-card-expiry" className="block text-gray-700 font-semibold mb-1">Expiry</label>
                     <input
+                      id="checkout-card-expiry"
                       type="text"
                       value={cardExpiry}
                       onChange={(e) => setCardExpiry(e.target.value)}
@@ -300,8 +307,9 @@ export default function CheckoutModal() {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-1">CVV</label>
+                    <label htmlFor="checkout-card-cvv" className="block text-gray-700 font-semibold mb-1">CVV</label>
                     <input
+                      id="checkout-card-cvv"
                       type="text"
                       value={cardCvv}
                       onChange={(e) => setCardCvv(e.target.value)}

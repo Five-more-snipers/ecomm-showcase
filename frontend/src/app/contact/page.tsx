@@ -139,8 +139,9 @@ export default function ContactPage() {
                 <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-1">Your Name</label>
+                      <label htmlFor="contact-name" className="block text-gray-700 font-semibold mb-1">Your Name</label>
                       <input
+                        id="contact-name"
                         type="text"
                         required
                         value={name}
@@ -149,8 +150,9 @@ export default function ContactPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-1">Email Address</label>
+                      <label htmlFor="contact-email" className="block text-gray-700 font-semibold mb-1">Email Address</label>
                       <input
+                        id="contact-email"
                         type="email"
                         required
                         value={email}
@@ -161,8 +163,9 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-1">Subject</label>
+                    <label htmlFor="contact-subject" className="block text-gray-700 font-semibold mb-1">Subject</label>
                     <input
+                      id="contact-subject"
                       type="text"
                       required
                       value={subject}
@@ -172,8 +175,9 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-1">Message</label>
+                    <label htmlFor="contact-message" className="block text-gray-700 font-semibold mb-1">Message</label>
                     <textarea
+                      id="contact-message"
                       rows={5}
                       required
                       value={message}

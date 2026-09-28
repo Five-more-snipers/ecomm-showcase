@@ -12,14 +12,10 @@ import {
   ChevronDown,
   ExternalLink,
   Plus,
-  MessageSquare,
-  HelpCircle,
   Menu,
   X,
   SlidersHorizontal,
   Store,
-  Layers,
-  Sparkles,
   Users,
   LogOut,
   ShieldAlert,
@@ -27,7 +23,13 @@ import {
 import { useSimulatorStore } from '@/stores/useSimulatorStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+function getRoleBadgeClass(role?: string): string {
+  if (role === 'ADMIN') return 'bg-[#dba617] text-black';
+  if (role === 'MODERATOR') return 'bg-blue-400 text-white';
+  return 'bg-emerald-400 text-white';
+}
+
+export default function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
   const { simulationMode, setSimulationMode } = useSimulatorStore();
   const { currentUser, logout } = useAuthStore();
@@ -35,6 +37,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isScreenOptionsOpen, setIsScreenOptionsOpen] = useState(false);
+
+  const ADMIN_PRODUCTS_PATH = '/admin/products';
+  const ADMIN_ORDERS_PATH = '/admin/orders';
+  const ADMIN_USERS_PATH = '/admin/users';
 
   const menuItems = [
     {
@@ -46,10 +52,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     {
       title: 'Products',
       icon: <Package size={18} />,
-      href: '/admin/products',
-      activeMatch: (p: string) => p.startsWith('/admin/products'),
+      href: ADMIN_PRODUCTS_PATH,
+      activeMatch: (p: string) => p.startsWith(ADMIN_PRODUCTS_PATH),
       subItems: [
-        { title: 'All Products', href: '/admin/products' },
+        { title: 'All Products', href: ADMIN_PRODUCTS_PATH },
         { title: 'Add New', href: '/admin/products/new' },
       ],
     },
@@ -62,17 +68,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     {
       title: 'WooCommerce',
       icon: <ShoppingCart size={18} />,
-      href: '/admin/orders',
-      activeMatch: (p: string) => p.startsWith('/admin/orders'),
-      subItems: [{ title: 'Orders', href: '/admin/orders' }],
+      href: ADMIN_ORDERS_PATH,
+      activeMatch: (p: string) => p.startsWith(ADMIN_ORDERS_PATH),
+      subItems: [{ title: 'Orders', href: ADMIN_ORDERS_PATH }],
     },
     {
       title: 'Users',
       icon: <Users size={18} />,
-      href: '/admin/users',
-      activeMatch: (p: string) => p.startsWith('/admin/users'),
+      href: ADMIN_USERS_PATH,
+      activeMatch: (p: string) => p.startsWith(ADMIN_USERS_PATH),
       adminOnlyBadge: currentUser?.role !== 'ADMIN',
-      subItems: [{ title: 'All Users', href: '/admin/users' }],
+      subItems: [{ title: 'All Users', href: ADMIN_USERS_PATH }],
     },
     {
       title: 'Settings',
@@ -164,13 +170,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               title="View Account Profile"
             >
               <span>Howdy, <strong className="text-white">{currentUser?.fullName.split(' ')[0] || 'Guest'}</strong></span>
-              <span className={`text-[9px] uppercase px-1.5 py-0.2 rounded font-bold ${
-                currentUser?.role === 'ADMIN'
-                  ? 'bg-[#dba617] text-black'
-                  : currentUser?.role === 'MODERATOR'
-                  ? 'bg-blue-400 text-white'
-                  : 'bg-emerald-400 text-white'
-              }`}>
+              <span className={`text-[9px] uppercase px-1.5 py-0.2 rounded font-bold ${getRoleBadgeClass(currentUser?.role)}`}>
                 {currentUser?.role || 'Guest'}
               </span>
               <div className="w-5 h-5 rounded-full bg-[#dba617] text-black font-bold flex items-center justify-center text-[10px]">
@@ -238,9 +238,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="flex-1 flex pt-8">
         {/* 2. Left WordPress Admin Sidebar (#1d2327) */}
         <aside
-          className={`bg-[#1d2327] text-[#c3c4c7] flex-shrink-0 transition-all duration-200 z-30 select-none ${
-            isSidebarCollapsed ? 'w-12' : 'w-44'
-          } hidden md:flex flex-col justify-between`}
+          className={`bg-[#1d2327] text-[#c3c4c7] flex-shrink-0 transition-all duration-200 z-30 select-none ${isSidebarCollapsed ? 'w-12' : 'w-44'
+            } hidden md:flex flex-col justify-between`}
         >
           <div>
             <nav className="py-2 space-y-0.5">
@@ -250,11 +249,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <div key={item.title} className="group relative">
                     <Link
                       href={item.href}
-                      className={`flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium transition ${
-                        isActive
+                      className={`flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium transition ${isActive
                           ? 'bg-[#2271b1] text-white font-semibold'
                           : 'hover:bg-[#2c3338] hover:text-[#72aee6]'
-                      }`}
+                        }`}
                       title={item.title}
                     >
                       <span className="flex-shrink-0">{item.icon}</span>
@@ -270,11 +268,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             <Link
                               key={sub.title}
                               href={sub.href}
-                              className={`block pl-9 pr-3 py-1 text-xs transition ${
-                                isSubActive
+                              className={`block pl-9 pr-3 py-1 text-xs transition ${isSubActive
                                   ? 'text-white font-bold'
                                   : 'text-[#c3c4c7] hover:text-[#72aee6]'
-                              }`}
+                                }`}
                             >
                               {sub.title}
                             </Link>
@@ -312,11 +309,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       <Link
                         href={item.href}
                         onClick={() => setIsMobileSidebarOpen(false)}
-                        className={`flex items-center gap-2.5 px-4 py-2.5 text-[13px] font-medium transition ${
-                          isActive
+                        className={`flex items-center gap-2.5 px-4 py-2.5 text-[13px] font-medium transition ${isActive
                             ? 'bg-[#2271b1] text-white font-semibold'
                             : 'hover:bg-[#2c3338] hover:text-[#72aee6]'
-                        }`}
+                          }`}
                       >
                         {item.icon}
                         <span>{item.title}</span>
@@ -350,7 +346,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </Link>
               </div>
             </div>
-            <div className="flex-1" onClick={() => setIsMobileSidebarOpen(false)} />
+            <button
+              type="button"
+              className="flex-1 bg-transparent border-0 cursor-default"
+              onClick={() => setIsMobileSidebarOpen(false)}
+              aria-label="Close navigation sidebar"
+            />
           </div>
         )}
 

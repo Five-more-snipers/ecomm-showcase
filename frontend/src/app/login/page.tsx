@@ -128,7 +128,7 @@ export default function LoginPage() {
             <span>Secure Authentication Gateway</span>
           </div>
           <div>
-            <span className="text-market-yellow text-3xl font-black tracking-tighter">///</span>
+            <span className="text-market-yellow text-3xl font-black tracking-tighter">{'///'}</span>
             <span className="text-white text-2xl font-extrabold tracking-wider uppercase font-heading ml-2">
               ECOMMERCE <span className="text-market-yellow">SHOP</span>
             </span>
@@ -187,11 +187,12 @@ export default function LoginPage() {
           {activeTab === 'signin' ? (
             <form onSubmit={handleSignIn} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+                <label htmlFor="signin-email" className="block text-xs font-semibold text-gray-300 mb-1.5">
                   Email Address
                 </label>
                 <div className="relative">
                   <input
+                    id="signin-email"
                     type="email"
                     required
                     value={email}
@@ -204,11 +205,12 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+                <label htmlFor="signin-password" className="block text-xs font-semibold text-gray-300 mb-1.5">
                   Password (Encrypted)
                 </label>
                 <div className="relative">
                   <input
+                    id="signin-password"
                     type={showPassword ? 'text' : 'password'}
                     required
                     value={password}
@@ -240,11 +242,12 @@ export default function LoginPage() {
             /* Sign Up Form */
             <form onSubmit={handleSignUp} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+                <label htmlFor="signup-name" className="block text-xs font-semibold text-gray-300 mb-1.5">
                   Full Name
                 </label>
                 <div className="relative">
                   <input
+                    id="signup-name"
                     type="text"
                     required
                     value={fullName}
@@ -257,11 +260,12 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+                <label htmlFor="signup-email" className="block text-xs font-semibold text-gray-300 mb-1.5">
                   Email Address
                 </label>
                 <div className="relative">
                   <input
+                    id="signup-email"
                     type="email"
                     required
                     value={email}
@@ -274,11 +278,12 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+                <label htmlFor="signup-password" className="block text-xs font-semibold text-gray-300 mb-1.5">
                   Password (min 6 characters)
                 </label>
                 <div className="relative">
                   <input
+                    id="signup-password"
                     type={showPassword ? 'text' : 'password'}
                     required
                     value={password}

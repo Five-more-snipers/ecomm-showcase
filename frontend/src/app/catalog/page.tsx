@@ -103,8 +103,8 @@ export default function CatalogPage() {
     } else if (priceFilter === 'over_200') {
       result = result.filter((p) => p.price > 200);
     } else if (priceFilter === 'custom') {
-      const min = minPrice ? parseFloat(minPrice) : 0;
-      const max = maxPrice ? parseFloat(maxPrice) : Infinity;
+      const min = minPrice ? Number.parseFloat(minPrice) : 0;
+      const max = maxPrice ? Number.parseFloat(maxPrice) : Infinity;
       result = result.filter((p) => p.price >= min && p.price <= max);
     }
 
@@ -359,17 +359,18 @@ export default function CatalogPage() {
                   />
                   <span>In Stock Only</span>
                 </label>
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-2 cursor-pointer" aria-label="Rare or Limited Stock (5 or fewer)">
                   <input
                     type="radio"
                     name="availTier"
+                    aria-label="Rare or Limited Stock (5 or fewer)"
                     checked={availabilityFilter === 'limited'}
                     onChange={() => setAvailabilityFilter('limited')}
                     className="text-market-yellowDark focus:ring-0"
                   />
                   <span className="flex items-center gap-1">
-                    <span>Rare / Limited Stock (&le; 5)</span>
-                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                    Rare / Limited Stock (&le; 5)
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" aria-hidden="true" />
                   </span>
                 </label>
               </div>

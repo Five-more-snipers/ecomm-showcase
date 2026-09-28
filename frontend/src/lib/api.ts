@@ -1,4 +1,4 @@
-import { Cart, CartItem, Category, CheckoutRequest, Order, OrderStatus, OrderTracking, Product } from '@/types';
+import { Cart, Category, CheckoutRequest, Order, OrderStatus, OrderTracking, Product } from '@/types';
 import {
   PRESET_CATEGORIES,
   PRESET_PRODUCTS,
@@ -104,6 +104,7 @@ export async function fetchFeaturedProducts(): Promise<Product[]> {
     const res = await fetch(`${API_BASE_URL}/products/featured`, { cache: 'no-store' });
     return await handleResponse<Product[]>(res);
   } catch (err) {
+    console.warn('Backend unavailable, using preset featured products:', err);
     return PRESET_PRODUCTS.filter((p) => p.isFeatured);
   }
 }
@@ -113,6 +114,7 @@ export async function fetchProduct(id: number): Promise<Product> {
     const res = await fetch(`${API_BASE_URL}/products/${id}`, { cache: 'no-store' });
     return await handleResponse<Product>(res);
   } catch (err) {
+    console.warn('Backend unavailable, using preset product:', err);
     const item = PRESET_PRODUCTS.find((p) => p.id === id);
     if (!item) throw new Error('Product not found');
     return item;
@@ -150,8 +152,7 @@ export async function seedPresetCart(cartId: string): Promise<Cart> {
   try {
     // Attempt backend seed with Product 1 ($199.99) and Product 5 ($74.00)
     await addToCart(cartId, 1, 1);
-    const updated = await addToCart(cartId, 5, 1);
-    return updated;
+    return await addToCart(cartId, 5, 1);
   } catch (err) {
     console.warn('Failed to seed backend cart, seeding locally:', err);
     const local = { ...PRESET_CART_DEFAULT, cartId };
@@ -169,6 +170,7 @@ export async function addToCart(cartId: string, productId: number, quantity: num
     });
     return await handleResponse<Cart>(res);
   } catch (err) {
+    console.warn('Backend unavailable, updating local cart:', err);
     // Offline local fallback
     const cart = getLocalCart(cartId);
     const product = PRESET_PRODUCTS.find((p) => p.id === productId);
@@ -209,6 +211,7 @@ export async function updateCartItem(cartId: string, itemId: number, quantity: n
     });
     return await handleResponse<Cart>(res);
   } catch (err) {
+    console.warn('Backend unavailable, updating item in local cart:', err);
     const cart = getLocalCart(cartId);
     if (quantity <= 0) {
       cart.items = cart.items.filter((i) => i.id !== itemId);
@@ -233,6 +236,7 @@ export async function removeCartItem(cartId: string, itemId: number): Promise<Ca
     });
     return await handleResponse<Cart>(res);
   } catch (err) {
+    console.warn('Backend unavailable, removing item from local cart:', err);
     const cart = getLocalCart(cartId);
     cart.items = cart.items.filter((i) => i.id !== itemId);
     cart.totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
@@ -245,6 +249,82 @@ export async function removeCartItem(cartId: string, itemId: number): Promise<Ca
 // -----------------------------------------------------------------------------
 // Checkout & Order APIs
 // -----------------------------------------------------------------------------
+function executeSimulatedCheckout(request: CheckoutRequest): {
+  orderId: string;
+  orderNumber: string;
+  status: OrderStatus;
+  total: number;
+  paymentTransactionRef: string;
+  message: string;
+} {
+  const card = request.payment.cardNumber || '';
+  const sim = request.payment.simulationMode;
+
+  if (sim === 'FORCE_DECLINE' || card.endsWith('0002')) {
+    throw new Error('Transaction declined: Insufficient funds (Simulated test card 0002).');
+  }
+  if (sim === 'FORCE_TIMEOUT' || card.endsWith('0004')) {
+    throw new Error('Payment gateway timeout after 10000ms (Simulated test card 0004).');
+  }
+
+  const randomArray = new Uint32Array(2);
+  if (typeof crypto !== 'undefined' && crypto?.getRandomValues) {
+    crypto.getRandomValues(randomArray);
+  } else {
+    randomArray[0] = Date.now() % 900000;
+    randomArray[1] = (Date.now() + 12345) % 900000;
+  }
+  const orderNum = `ORD-2026-${100000 + (randomArray[0] % 900000)}`;
+  const localCart = getLocalCart(request.cartId);
+  const subtotal = localCart.subtotal || 273.99;
+  const tax = Number((subtotal * 0.08).toFixed(2));
+  const shipping = subtotal >= 100.0 ? 0.0 : 10.0;
+  const total = Number((subtotal + tax + shipping).toFixed(2));
+
+  const simulatedOrder: Order = {
+    orderId: `order-sim-${Date.now()}`,
+    orderNumber: orderNum,
+    status: 'PAYMENT_CONFIRMED',
+    subtotal,
+    tax,
+    shipping,
+    total,
+    customerName: request.customerName,
+    customerEmail: request.customerEmail,
+    shippingAddress: request.shippingAddress,
+    shippingCity: request.shippingCity,
+    shippingPostalCode: request.shippingPostalCode,
+    paymentMethod: request.payment.paymentMethod,
+    paymentStatus: 'COMPLETED',
+    transactionRef: `TXN-SIM-${100000 + (randomArray[1] % 900000)}`,
+    createdAt: new Date().toISOString(),
+    items: localCart.items.map((i) => ({
+      id: i.id,
+      productId: i.productId,
+      title: i.title,
+      sku: i.sku,
+      imageUrl: i.imageUrl,
+      unitPrice: i.unitPrice,
+      quantity: i.quantity,
+      totalPrice: i.lineTotal,
+    })),
+  };
+
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(`ecomm_order_${orderNum}`, JSON.stringify(simulatedOrder));
+    saveLocalCart({ cartId: request.cartId, items: [], totalItems: 0, subtotal: 0 });
+  }
+
+  return {
+    orderId: simulatedOrder.orderId,
+    orderNumber: orderNum,
+    status: 'PAYMENT_CONFIRMED',
+    total,
+    paymentTransactionRef: simulatedOrder.transactionRef!,
+    message: 'Simulated checkout completed successfully.',
+  };
+}
+
 export async function executeCheckout(request: CheckoutRequest): Promise<{
   orderId: string;
   orderNumber: string;
@@ -261,70 +341,9 @@ export async function executeCheckout(request: CheckoutRequest): Promise<{
     });
     return await handleResponse<any>(res);
   } catch (err: any) {
-    // If it's a backend validation error (4xx/5xx from API), rethrow it
     if (err.status) throw err;
-
-    // Offline simulation mode handling
-    const card = request.payment.cardNumber || '';
-    const sim = request.payment.simulationMode;
-
-    if (sim === 'FORCE_DECLINE' || card.endsWith('0002')) {
-      throw new Error('Transaction declined: Insufficient funds (Simulated test card 0002).');
-    }
-    if (sim === 'FORCE_TIMEOUT' || card.endsWith('0004')) {
-      throw new Error('Payment gateway timeout after 10000ms (Simulated test card 0004).');
-    }
-
-    const orderNum = `ORD-2026-${Math.floor(100000 + Math.random() * 900000)}`;
-    const localCart = getLocalCart(request.cartId);
-    const subtotal = localCart.subtotal || 273.99;
-    const tax = Number((subtotal * 0.08).toFixed(2));
-    const shipping = subtotal >= 100.0 ? 0.0 : 10.0;
-    const total = Number((subtotal + tax + shipping).toFixed(2));
-
-    const simulatedOrder: Order = {
-      orderId: `order-sim-${Date.now()}`,
-      orderNumber: orderNum,
-      status: 'PAYMENT_CONFIRMED',
-      subtotal,
-      tax,
-      shipping,
-      total,
-      customerName: request.customerName,
-      customerEmail: request.customerEmail,
-      shippingAddress: request.shippingAddress,
-      shippingCity: request.shippingCity,
-      shippingPostalCode: request.shippingPostalCode,
-      paymentMethod: request.payment.paymentMethod,
-      paymentStatus: 'COMPLETED',
-      transactionRef: `TXN-SIM-${Math.floor(100000 + Math.random() * 900000)}`,
-      createdAt: new Date().toISOString(),
-      items: localCart.items.map((i) => ({
-        id: i.id,
-        productId: i.productId,
-        title: i.title,
-        sku: i.sku,
-        imageUrl: i.imageUrl,
-        unitPrice: i.unitPrice,
-        quantity: i.quantity,
-        totalPrice: i.lineTotal,
-      })),
-    };
-
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(`ecomm_order_${orderNum}`, JSON.stringify(simulatedOrder));
-      // Clear cart
-      saveLocalCart({ cartId: request.cartId, items: [], totalItems: 0, subtotal: 0 });
-    }
-
-    return {
-      orderId: simulatedOrder.orderId,
-      orderNumber: orderNum,
-      status: 'PAYMENT_CONFIRMED',
-      total,
-      paymentTransactionRef: simulatedOrder.transactionRef!,
-      message: 'Simulated checkout completed successfully.',
-    };
+    console.warn('Backend unavailable, running offline simulated checkout:', err);
+    return executeSimulatedCheckout(request);
   }
 }
 
@@ -333,6 +352,7 @@ export async function fetchOrder(orderNumber: string): Promise<Order> {
     const res = await fetch(`${API_BASE_URL}/orders/${orderNumber}`, { cache: 'no-store' });
     return await handleResponse<Order>(res);
   } catch (err) {
+    console.warn('Backend unavailable, loading local order:', err);
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem(`ecomm_order_${orderNumber}`);
       if (stored) return JSON.parse(stored);
@@ -346,6 +366,7 @@ export async function fetchOrderTracking(orderNumber: string): Promise<OrderTrac
     const res = await fetch(`${API_BASE_URL}/orders/${orderNumber}/tracking`, { cache: 'no-store' });
     return await handleResponse<OrderTracking>(res);
   } catch (err) {
+    console.warn('Backend unavailable, returning default tracking:', err);
     return { ...PRESET_TRACKING_DEFAULT, orderNumber };
   }
 }
@@ -357,6 +378,7 @@ export async function cancelOrder(orderNumber: string): Promise<Order> {
     });
     return await handleResponse<Order>(res);
   } catch (err) {
+    console.warn('Backend unavailable, cancelling order locally:', err);
     const order = await fetchOrder(orderNumber);
     order.status = 'CANCELLED';
     if (typeof window !== 'undefined') {
@@ -373,6 +395,7 @@ export async function advanceOrderStatus(orderNumber: string, status: OrderStatu
     });
     return await handleResponse<Order>(res);
   } catch (err) {
+    console.warn('Backend unavailable, updating order status locally:', err);
     const order = await fetchOrder(orderNumber);
     order.status = status;
     if (typeof window !== 'undefined') {
@@ -385,28 +408,38 @@ export async function advanceOrderStatus(orderNumber: string, status: OrderStatu
 // -----------------------------------------------------------------------------
 // Back-Office / Admin APIs
 // -----------------------------------------------------------------------------
+function getLocalStoredOrders(): Order[] {
+  const localOrders: Order[] = [PRESET_ORDER_DEFAULT];
+  if (typeof window === 'undefined') {
+    return localOrders;
+  }
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key?.startsWith('ecomm_order_')) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed.orderNumber && !localOrders.some((o) => o.orderNumber === parsed.orderNumber)) {
+            localOrders.unshift(parsed);
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to parse cached local order:', err);
+      }
+    }
+  }
+  return localOrders;
+}
+
 export async function fetchAdminOrders(): Promise<Order[]> {
   try {
     const res = await fetch(`${API_BASE_URL}/admin/orders`, { cache: 'no-store' });
     const orders = await handleResponse<Order[]>(res);
-    return orders && orders.length > 0 ? orders : [PRESET_ORDER_DEFAULT];
+    return orders?.length ? orders : [PRESET_ORDER_DEFAULT];
   } catch (err) {
-    // Collect local orders from localStorage
-    const localOrders: Order[] = [PRESET_ORDER_DEFAULT];
-    if (typeof window !== 'undefined') {
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('ecomm_order_')) {
-          try {
-            const parsed = JSON.parse(localStorage.getItem(key) || '{}');
-            if (parsed.orderNumber && !localOrders.some((o) => o.orderNumber === parsed.orderNumber)) {
-              localOrders.unshift(parsed);
-            }
-          } catch (e) {}
-        }
-      }
-    }
-    return localOrders;
+    console.warn('Backend unavailable, loading local orders:', err);
+    return getLocalStoredOrders();
   }
 }
 
@@ -429,6 +462,7 @@ export async function createAdminProduct(data: {
     });
     return await handleResponse<Product>(res);
   } catch (err) {
+    console.warn('Backend unavailable, creating local preset product:', err);
     const newProduct: Product = {
       id: Date.now(),
       sku: data.sku || `PROD-${Date.now()}`,
@@ -446,19 +480,36 @@ export async function createAdminProduct(data: {
   }
 }
 
+type AdminProductUpdatePayload = {
+  sku?: string;
+  title?: string;
+  description?: string;
+  price?: number;
+  imageUrl?: string;
+  categoryId?: number;
+  isFeatured?: boolean;
+  isActive?: boolean;
+  stockQuantity?: number;
+};
+
+function updateLocalPresetProduct(id: number, data: AdminProductUpdatePayload): Product {
+  const product = PRESET_PRODUCTS.find((p) => p.id === id);
+  if (!product) {
+    throw new Error('Product not found in local presets');
+  }
+  if (data.title) product.title = data.title;
+  if (data.price !== undefined) product.price = data.price;
+  if (data.description !== undefined) product.description = data.description;
+  if (data.sku) product.sku = data.sku;
+  if (data.isFeatured !== undefined) product.isFeatured = data.isFeatured;
+  if (data.isActive !== undefined) product.isActive = data.isActive;
+  if (data.stockQuantity !== undefined) product.stockAvailable = data.stockQuantity;
+  return product;
+}
+
 export async function updateAdminProduct(
   id: number,
-  data: {
-    sku?: string;
-    title?: string;
-    description?: string;
-    price?: number;
-    imageUrl?: string;
-    categoryId?: number;
-    isFeatured?: boolean;
-    isActive?: boolean;
-    stockQuantity?: number;
-  }
+  data: AdminProductUpdatePayload
 ): Promise<Product> {
   try {
     const res = await fetch(`${API_BASE_URL}/admin/products/${id}`, {
@@ -468,18 +519,8 @@ export async function updateAdminProduct(
     });
     return await handleResponse<Product>(res);
   } catch (err) {
-    const idx = PRESET_PRODUCTS.findIndex((p) => p.id === id);
-    if (idx >= 0) {
-      if (data.title) PRESET_PRODUCTS[idx].title = data.title;
-      if (data.price !== undefined) PRESET_PRODUCTS[idx].price = data.price;
-      if (data.description !== undefined) PRESET_PRODUCTS[idx].description = data.description;
-      if (data.sku) PRESET_PRODUCTS[idx].sku = data.sku;
-      if (data.isFeatured !== undefined) PRESET_PRODUCTS[idx].isFeatured = data.isFeatured;
-      if (data.isActive !== undefined) PRESET_PRODUCTS[idx].isActive = data.isActive;
-      if (data.stockQuantity !== undefined) PRESET_PRODUCTS[idx].stockAvailable = data.stockQuantity;
-      return PRESET_PRODUCTS[idx];
-    }
-    throw new Error('Product not found in local presets');
+    console.warn('Backend unavailable, updating local preset product:', err);
+    return updateLocalPresetProduct(id, data);
   }
 }
 
@@ -487,6 +528,7 @@ export async function deleteAdminProduct(id: number): Promise<void> {
   try {
     await fetch(`${API_BASE_URL}/admin/products/${id}`, { method: 'DELETE' });
   } catch (err) {
+    console.warn('Backend unavailable, marking local product inactive:', err);
     const p = PRESET_PRODUCTS.find((item) => item.id === id);
     if (p) p.isActive = false;
   }
@@ -502,6 +544,7 @@ export async function updateAdminInventory(productId: number, quantityAvailable:
     const data = await handleResponse<{ productId: number; quantityAvailable: number }>(res);
     return data.quantityAvailable;
   } catch (err) {
+    console.warn('Backend unavailable, updating local inventory stock:', err);
     const p = PRESET_PRODUCTS.find((item) => item.id === productId);
     if (p) p.stockAvailable = quantityAvailable;
     return quantityAvailable;

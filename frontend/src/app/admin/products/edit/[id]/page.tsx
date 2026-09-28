@@ -5,18 +5,16 @@ import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import {
   Package,
-  Layers,
   CheckCircle2,
-  AlertCircle,
-  Image as ImageIcon,
   DollarSign,
   Boxes,
   ArrowLeft,
-  Trash2,
   ExternalLink,
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchProduct, fetchCategories, updateAdminProduct, deleteAdminProduct } from '@/lib/api';
+
+const DEFAULT_PRODUCT_IMAGE = '/images/image_1.webp';
 
 export default function AdminEditProductPage() {
   const router = useRouter();
@@ -30,7 +28,7 @@ export default function AdminEditProductPage() {
   const [price, setPrice] = useState('0.00');
   const [stockQuantity, setStockQuantity] = useState('0');
   const [categoryId, setCategoryId] = useState<number>(1);
-  const [imageUrl, setImageUrl] = useState('/images/image_1.webp');
+  const [imageUrl, setImageUrl] = useState(DEFAULT_PRODUCT_IMAGE);
   const [isFeatured, setIsFeatured] = useState(false);
   const [isActive, setIsActive] = useState(true);
   const [activeTab, setActiveTab] = useState<'general' | 'inventory'>('general');
@@ -39,7 +37,7 @@ export default function AdminEditProductPage() {
   const { data: product, isLoading } = useQuery({
     queryKey: ['product', productId],
     queryFn: () => fetchProduct(productId),
-    enabled: !isNaN(productId),
+    enabled: !Number.isNaN(productId),
   });
 
   const { data: categories = [] } = useQuery({
@@ -55,7 +53,7 @@ export default function AdminEditProductPage() {
       setPrice(product.price.toString());
       setStockQuantity(product.stockAvailable.toString());
       setCategoryId(product.category?.id || 1);
-      setImageUrl(product.imageUrl || '/images/image_1.webp');
+      setImageUrl(product.imageUrl || DEFAULT_PRODUCT_IMAGE);
       setIsFeatured(product.isFeatured);
       setIsActive(product.isActive);
     }
@@ -67,8 +65,8 @@ export default function AdminEditProductPage() {
         title,
         description,
         sku,
-        price: parseFloat(price) || 0,
-        stockQuantity: parseInt(stockQuantity, 10) || 0,
+        price: Number.parseFloat(price) || 0,
+        stockQuantity: Number.parseInt(stockQuantity, 10) || 0,
         categoryId,
         imageUrl,
         isFeatured,
@@ -192,11 +190,10 @@ export default function AdminEditProductPage() {
                 <button
                   type="button"
                   onClick={() => setActiveTab('general')}
-                  className={`w-full text-left px-3.5 py-2.5 border-b border-[#dcdcde] flex items-center gap-2 ${
-                    activeTab === 'general'
+                  className={`w-full text-left px-3.5 py-2.5 border-b border-[#dcdcde] flex items-center gap-2 ${activeTab === 'general'
                       ? 'bg-white border-l-4 border-l-[#2271b1] font-bold text-[#1d2327]'
                       : 'text-[#50575e] hover:bg-gray-100'
-                  }`}
+                    }`}
                 >
                   <DollarSign size={14} />
                   <span>General</span>
@@ -204,11 +201,10 @@ export default function AdminEditProductPage() {
                 <button
                   type="button"
                   onClick={() => setActiveTab('inventory')}
-                  className={`w-full text-left px-3.5 py-2.5 border-b border-[#dcdcde] flex items-center gap-2 ${
-                    activeTab === 'inventory'
+                  className={`w-full text-left px-3.5 py-2.5 border-b border-[#dcdcde] flex items-center gap-2 ${activeTab === 'inventory'
                       ? 'bg-white border-l-4 border-l-[#2271b1] font-bold text-[#1d2327]'
                       : 'text-[#50575e] hover:bg-gray-100'
-                  }`}
+                    }`}
                 >
                   <Boxes size={14} />
                   <span>Inventory</span>
@@ -220,8 +216,9 @@ export default function AdminEditProductPage() {
                 {activeTab === 'general' && (
                   <div className="space-y-3">
                     <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
-                      <label className="text-gray-700 font-semibold">Regular price ($):</label>
+                      <label htmlFor="edit-product-price" className="text-gray-700 font-semibold">Regular price ($):</label>
                       <input
+                        id="edit-product-price"
                         type="number"
                         step="0.01"
                         value={price}
@@ -236,8 +233,9 @@ export default function AdminEditProductPage() {
                 {activeTab === 'inventory' && (
                   <div className="space-y-3">
                     <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
-                      <label className="text-gray-700 font-semibold">SKU:</label>
+                      <label htmlFor="edit-product-sku" className="text-gray-700 font-semibold">SKU:</label>
                       <input
+                        id="edit-product-sku"
                         type="text"
                         value={sku}
                         onChange={(e) => setSku(e.target.value)}
@@ -246,8 +244,9 @@ export default function AdminEditProductPage() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
-                      <label className="text-gray-700 font-semibold">Stock quantity:</label>
+                      <label htmlFor="edit-product-stock" className="text-gray-700 font-semibold">Stock quantity:</label>
                       <input
+                        id="edit-product-stock"
                         type="number"
                         value={stockQuantity}
                         onChange={(e) => setStockQuantity(e.target.value)}
@@ -257,7 +256,7 @@ export default function AdminEditProductPage() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
-                      <label className="text-gray-700 font-semibold">Quick Set Stock:</label>
+                      <span className="text-gray-700 font-semibold">Quick Set Stock:</span>
                       <div className="sm:col-span-2 flex gap-1.5">
                         <button
                           type="button"
@@ -363,16 +362,17 @@ export default function AdminEditProductPage() {
                   alt="Product preview"
                   className="w-full h-full object-cover"
                   onError={(e) => {
-                    (e.target as any).src = '/images/image_1.webp';
+                    (e.target as any).src = DEFAULT_PRODUCT_IMAGE;
                   }}
                 />
               </div>
 
               <div>
-                <label className="block text-left text-[11px] font-semibold text-gray-700 mb-1">
+                <label htmlFor="edit-product-image-url" className="block text-left text-[11px] font-semibold text-gray-700 mb-1">
                   Image Path / URL:
                 </label>
                 <input
+                  id="edit-product-image-url"
                   type="text"
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}

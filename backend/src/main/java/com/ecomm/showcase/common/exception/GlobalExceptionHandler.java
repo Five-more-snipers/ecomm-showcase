@@ -22,15 +22,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex, HttpServletRequest request) {
         log.warn("Business rule violation: [{}] {}", ex.getErrorCode(), ex.getMessage());
 
+        HttpStatus status = ex.getStatus() != null ? ex.getStatus() : HttpStatus.BAD_REQUEST;
+
         ErrorResponse response = ErrorResponse.builder()
                 .timestamp(Instant.now())
-                .status(ex.getStatus().value())
+                .status(status.value())
                 .error(ex.getErrorCode())
                 .message(ex.getMessage())
                 .path(request.getRequestURI())
                 .build();
 
-        return ResponseEntity.status(ex.getStatus()).body(response);
+        return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -1,0 +1,1330 @@
+
+Use `Math.trunc` instead of `|= 0`.
+
+Intentionality
+Reliability
+
+
+4
+High
+Maintainability
+
+
+4
+High
+
+confusing
+es2015
++
+
+
+Open
+
+Not assigned
+L47
+5min effort
+1 day ago
+frontend/src/stores/useCartStore.ts
+
+
+Use `Math.trunc` instead of `| 0`.
+
+Intentionality
+Reliability
+
+
+4
+High
+Maintainability
+
+
+4
+High
+
+confusing
+es2015
++
+
+
+Open
+
+Not assigned
+L19
+5min effort
+1 day ago
+frontend/src/lib/api.ts
+
+
+Make sure that using this pseudorandom number generator is safe here.
+
+Responsibility
+Security
+
+
+2
+Medium
+
+cwe
+former-hotspot
++
+
+
+Open
+
+Not assigned
+L278
+10min effort
+1 day ago
+
+
+Make sure that using this pseudorandom number generator is safe here.
+
+Responsibility
+Security
+
+
+2
+Medium
+
+cwe
+former-hotspot
++
+
+
+Open
+
+Not assigned
+L300
+10min effort
+1 day ago
+frontend/src/lib/crypto.ts
+
+
+Make sure that using this pseudorandom number generator is safe here.
+
+Responsibility
+Security
+
+
+2
+Medium
+
+cwe
+former-hotspot
++
+
+
+Open
+
+Not assigned
+L23
+10min effort
+1 day ago
+frontend/src/stores/useAuthStore.ts
+
+
+Review this potentially hard-coded password.
+
+Responsibility
+Security
+
+
+2
+Medium
+
+cwe
+former-hotspot
+...
++
+
+
+Open
+
+Not assigned
+L17
+30min effort
+1 day ago
+
+
+Review this potentially hard-coded password.
+
+Responsibility
+Security
+
+
+2
+Medium
+
+cwe
+former-hotspot
+...
++
+
+
+Open
+
+Not assigned
+L30
+30min effort
+1 day ago
+
+
+Review this potentially hard-coded password.
+
+Responsibility
+Security
+
+
+2
+Medium
+
+cwe
+former-hotspot
+...
++
+
+
+Open
+
+Not assigned
+L43
+30min effort
+1 day ago
+
+
+Review this potentially hard-coded password.
+
+Responsibility
+Security
+
+
+2
+Medium
+
+cwe
+former-hotspot
+...
++
+
+
+Open
+
+Not assigned
+L56
+30min effort
+1 day ago
+frontend/src/stores/useCartStore.ts
+
+
+Make sure that using this pseudorandom number generator is safe here.
+
+Responsibility
+Security
+
+
+2
+Medium
+
+cwe
+former-hotspot
++
+
+
+Open
+
+Not assigned
+L19
+10min effort
+1 day ago
+design-reference/header.php
+
+
+Add a <title> tag to this page.
+
+Consistency
+Reliability
+
+
+2
+Medium
+
+user-experience
++
+
+
+Open
+
+Not assigned
+L12
+5min effort
+1 day ago
+frontend/src/app/admin/inventory/page.tsx
+
+
+Prefer `Number.parseInt` over `parseInt`.
+
+Consistency
+Reliability
+
+
+2
+Medium
+Maintainability
+
+
+3
+Low
+
+convention
+editable-source
+...
++
+
+
+Open
+
+Not assigned
+L225
+2min effort
+1 day ago
+frontend/src/app/admin/layout.tsx
+
+
+Avoid non-native interactive elements. If using native HTML is not possible, add an appropriate role and support for tabbing, mouse, keyboard, and touch inputs to an interactive content element.
+
+Consistency
+Reliability
+
+
+2
+Medium
+Maintainability
+
+
+3
+Low
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L353
+5min effort
+1 day ago
+frontend/.../app/admin/products/edit/[id]/page.tsx
+
+
+Prefer `Number.isNaN` over `isNaN`.
+
+Consistency
+Reliability
+
+
+2
+Medium
+Maintainability
+
+
+3
+Low
+
+convention
+editable-source
+...
++
+
+
+Open
+
+Not assigned
+L42
+2min effort
+1 day ago
+
+
+Prefer `Number.parseFloat` over `parseFloat`.
+
+Consistency
+Reliability
+
+
+2
+Medium
+Maintainability
+
+
+3
+Low
+
+convention
+editable-source
+...
++
+
+
+Open
+
+Not assigned
+L70
+2min effort
+1 day ago
+
+
+Prefer `Number.parseInt` over `parseInt`.
+
+Consistency
+Reliability
+
+
+2
+Medium
+Maintainability
+
+
+3
+Low
+
+convention
+editable-source
+...
++
+
+
+Open
+
+Not assigned
+L71
+2min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L223
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L239
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L249
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L260
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L372
+5min effort
+1 day ago
+frontend/src/app/admin/products/new/page.tsx
+
+
+Prefer `Number.parseFloat` over `parseFloat`.
+
+Consistency
+Reliability
+
+
+2
+Medium
+Maintainability
+
+
+3
+Low
+
+convention
+editable-source
+...
++
+
+
+Open
+
+Not assigned
+L45
+2min effort
+1 day ago
+
+
+Prefer `Number.parseInt` over `parseInt`.
+
+Consistency
+Reliability
+
+
+2
+Medium
+Maintainability
+
+
+3
+Low
+
+convention
+editable-source
+...
++
+
+
+Open
+
+Not assigned
+L46
+2min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L181
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L192
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L206
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L217
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L228
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L320
+5min effort
+1 day ago
+frontend/src/app/admin/products/page.tsx
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L348
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L360
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L372
+5min effort
+1 day ago
+
+
+Prefer `Number.parseFloat` over `parseFloat`.
+
+Consistency
+Reliability
+
+
+2
+Medium
+Maintainability
+
+
+3
+Low
+
+convention
+editable-source
+...
++
+
+
+Open
+
+Not assigned
+L379
+2min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L385
+5min effort
+1 day ago
+
+
+Prefer `Number.parseInt` over `parseInt`.
+
+Consistency
+Reliability
+
+
+2
+Medium
+Maintainability
+
+
+3
+Low
+
+convention
+editable-source
+...
++
+
+
+Open
+
+Not assigned
+L391
+2min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L397
+5min effort
+1 day ago
+
+
+Prefer `Number.parseInt` over `parseInt`.
+
+Consistency
+Reliability
+
+
+2
+Medium
+Maintainability
+
+
+3
+Low
+
+convention
+editable-source
+...
++
+
+
+Open
+
+Not assigned
+L402
+2min effort
+1 day ago
+frontend/src/app/catalog/page.tsx
+
+
+Prefer `Number.parseFloat` over `parseFloat`.
+
+Consistency
+Reliability
+
+
+2
+Medium
+Maintainability
+
+
+3
+Low
+
+convention
+editable-source
+...
++
+
+
+Open
+
+Not assigned
+L106
+2min effort
+1 day ago
+
+
+Prefer `Number.parseFloat` over `parseFloat`.
+
+Consistency
+Reliability
+
+
+2
+Medium
+Maintainability
+
+
+3
+Low
+
+convention
+editable-source
+...
++
+
+
+Open
+
+Not assigned
+L107
+2min effort
+1 day ago
+
+
+A form label must have accessible text.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L362
+5min effort
+1 day ago
+frontend/src/app/contact/page.tsx
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L142
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L152
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L164
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L175
+5min effort
+1 day ago
+frontend/src/app/login/page.tsx
+
+
+Comments inside children section of tag should be placed inside braces
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+jsx
+react
++
+
+
+Open
+
+Not assigned
+L131
+1min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L190
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L207
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L243
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L260
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L277
+5min effort
+1 day ago
+frontend/src/components/checkout/CheckoutModal.tsx
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L216
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L227
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L236
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L284
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L294
+5min effort
+1 day ago
+
+
+A form label must be associated with a control.
+
+Intentionality
+Reliability
+
+
+2
+Medium
+
+accessibility
+react
++
+
+
+Open
+
+Not assigned
+L303
+5min effort
+1 day ago

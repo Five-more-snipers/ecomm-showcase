@@ -42,8 +42,8 @@ export default function AdminNewProductPage() {
         title,
         description,
         sku: sku || `SKU-${Date.now()}`,
-        price: parseFloat(price) || 0,
-        stockQuantity: parseInt(stockQuantity, 10) || 0,
+        price: Number.parseFloat(price) || 0,
+        stockQuantity: Number.parseInt(stockQuantity, 10) || 0,
         categoryId,
         imageUrl,
         isFeatured,
@@ -178,8 +178,9 @@ export default function AdminNewProductPage() {
                 {activeTab === 'general' && (
                   <div className="space-y-3">
                     <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
-                      <label className="text-gray-700 font-semibold">Regular price ($):</label>
+                      <label htmlFor="new-product-price" className="text-gray-700 font-semibold">Regular price ($):</label>
                       <input
+                        id="new-product-price"
                         type="number"
                         step="0.01"
                         value={price}
@@ -189,8 +190,9 @@ export default function AdminNewProductPage() {
                       />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
-                      <label className="text-gray-500">Sale price ($):</label>
+                      <label htmlFor="new-product-sale-price" className="text-gray-500">Sale price ($):</label>
                       <input
+                        id="new-product-sale-price"
                         type="number"
                         step="0.01"
                         placeholder="Optional promotional price"
@@ -203,8 +205,9 @@ export default function AdminNewProductPage() {
                 {activeTab === 'inventory' && (
                   <div className="space-y-3">
                     <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
-                      <label className="text-gray-700 font-semibold">SKU:</label>
+                      <label htmlFor="new-product-sku" className="text-gray-700 font-semibold">SKU:</label>
                       <input
+                        id="new-product-sku"
                         type="text"
                         placeholder="e.g. ELEC-WH2000"
                         value={sku}
@@ -214,8 +217,9 @@ export default function AdminNewProductPage() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
-                      <label className="text-gray-700 font-semibold">Stock quantity:</label>
+                      <label htmlFor="new-product-stock" className="text-gray-700 font-semibold">Stock quantity:</label>
                       <input
+                        id="new-product-stock"
                         type="number"
                         value={stockQuantity}
                         onChange={(e) => setStockQuantity(e.target.value)}
@@ -225,8 +229,8 @@ export default function AdminNewProductPage() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
-                      <label className="text-gray-700 font-semibold">Stock status:</label>
-                      <select className="sm:col-span-2 border border-[#8c8f94] rounded px-2.5 py-1.5 text-xs bg-white outline-none">
+                      <label htmlFor="new-product-stock-status" className="text-gray-700 font-semibold">Stock status:</label>
+                      <select id="new-product-stock-status" className="sm:col-span-2 border border-[#8c8f94] rounded px-2.5 py-1.5 text-xs bg-white outline-none">
                         <option>In stock</option>
                         <option>Out of stock</option>
                         <option>On backorder</option>
@@ -317,10 +321,11 @@ export default function AdminNewProductPage() {
               </div>
 
               <div>
-                <label className="block text-left text-[11px] font-semibold text-gray-700 mb-1">
+                <label htmlFor="new-product-image-url" className="block text-left text-[11px] font-semibold text-gray-700 mb-1">
                   Image Path / URL:
                 </label>
                 <input
+                  id="new-product-image-url"
                   type="text"
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}

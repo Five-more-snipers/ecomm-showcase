@@ -3,21 +3,34 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
-  Plus,
   Search,
-  Filter,
-  Trash2,
-  Edit,
   ExternalLink,
   CheckCircle2,
-  AlertTriangle,
-  Sparkles,
-  X,
-  Boxes,
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchProducts, fetchCategories, updateAdminProduct, deleteAdminProduct } from '@/lib/api';
 import { Product } from '@/types';
+
+const FILTER_ACTIVE_CLASS = 'font-bold text-[#1d2327]';
+const FILTER_HOVER_CLASS = 'hover:text-[#2271b1]';
+
+function renderStockBadge(stockAvailable: number) {
+  if (stockAvailable <= 0) {
+    return <span className="text-[#d63638] font-bold">Out of stock (0)</span>;
+  }
+  if (stockAvailable <= 5) {
+    return (
+      <span className="text-[#b28209] font-bold">
+        Low stock ({stockAvailable})
+      </span>
+    );
+  }
+  return (
+    <span className="text-[#00a32a] font-semibold">
+      In stock ({stockAvailable})
+    </span>
+  );
+}
 
 export default function AdminProductsPage() {
   const queryClient = useQueryClient();
@@ -138,28 +151,28 @@ export default function AdminProductsPage() {
       <div className="flex items-center gap-2 text-xs text-[#50575e] pt-1 border-b border-[#dcdcde] pb-2">
         <button
           onClick={() => setStockFilter('all')}
-          className={`hover:text-[#2271b1] ${stockFilter === 'all' ? 'font-bold text-[#1d2327]' : ''}`}
+          className={`${stockFilter === 'all' ? FILTER_ACTIVE_CLASS : FILTER_HOVER_CLASS}`}
         >
           All ({products.length})
         </button>
         <span>|</span>
         <button
           onClick={() => setStockFilter('instock')}
-          className={`hover:text-[#2271b1] ${stockFilter === 'instock' ? 'font-bold text-[#1d2327]' : ''}`}
+          className={`${stockFilter === 'instock' ? FILTER_ACTIVE_CLASS : FILTER_HOVER_CLASS}`}
         >
           In Stock ({products.filter((p) => p.stockAvailable > 5).length})
         </button>
         <span>|</span>
         <button
           onClick={() => setStockFilter('lowstock')}
-          className={`hover:text-[#2271b1] ${stockFilter === 'lowstock' ? 'font-bold text-[#1d2327]' : ''}`}
+          className={`${stockFilter === 'lowstock' ? FILTER_ACTIVE_CLASS : FILTER_HOVER_CLASS}`}
         >
           Low Stock ({products.filter((p) => p.stockAvailable <= 5 && p.stockAvailable > 0).length})
         </button>
         <span>|</span>
         <button
           onClick={() => setStockFilter('outofstock')}
-          className={`hover:text-[#2271b1] ${stockFilter === 'outofstock' ? 'font-bold text-[#1d2327]' : ''}`}
+          className={`${stockFilter === 'outofstock' ? FILTER_ACTIVE_CLASS : FILTER_HOVER_CLASS}`}
         >
           Out of Stock ({products.filter((p) => p.stockAvailable <= 0).length})
         </button>
@@ -195,7 +208,7 @@ export default function AdminProductsPage() {
           </select>
 
           <button
-            onClick={() => {}}
+            onClick={() => { }}
             className="border border-[#2271b1] text-[#2271b1] bg-[#f6f7f7] hover:bg-[#2271b1] hover:text-white px-3 py-1 rounded font-semibold transition"
           >
             Filter
@@ -212,7 +225,7 @@ export default function AdminProductsPage() {
             className="border border-[#8c8f94] rounded px-2.5 py-1 text-xs outline-none bg-white text-[#2c3338]"
           />
           <button
-            onClick={() => {}}
+            onClick={() => { }}
             className="border border-[#2271b1] text-[#2271b1] bg-[#f6f7f7] hover:bg-[#2271b1] hover:text-white px-3 py-1 rounded font-semibold transition flex items-center gap-1"
           >
             <Search size={12} />
@@ -239,23 +252,29 @@ export default function AdminProductsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-[#f0f0f1]">
-            {isLoading ? (
-              <tr>
-                <td colSpan={8} className="p-6 text-center text-gray-400">
-                  Loading products...
-                </td>
-              </tr>
-            ) : filteredProducts.length === 0 ? (
-              <tr>
-                <td colSpan={8} className="p-8 text-center text-gray-500">
-                  No products found.
-                </td>
-              </tr>
-            ) : (
-              filteredProducts.map((p) => {
+            {(() => {
+              if (isLoading) {
+                return (
+                  <tr>
+                    <td colSpan={8} className="p-6 text-center text-gray-400">
+                      Loading products...
+                    </td>
+                  </tr>
+                );
+              }
+              if (filteredProducts.length === 0) {
+                return (
+                  <tr>
+                    <td colSpan={8} className="p-8 text-center text-gray-500">
+                      No products found.
+                    </td>
+                  </tr>
+                );
+              }
+              return filteredProducts.map((p) => {
                 const isQuickEditing = quickEditProduct?.id === p.id;
-                const isLowStock = p.stockAvailable <= 5;
-                const isOutOfStock = p.stockAvailable <= 0;
+                // const isLowStock = p.stockAvailable <= 5;
+                // const isOutOfStock = p.stockAvailable <= 0;
 
                 return (
                   <React.Fragment key={p.id}>
@@ -313,17 +332,7 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="p-2.5 font-mono text-[#50575e]">{p.sku}</td>
                       <td className="p-2.5">
-                        {isOutOfStock ? (
-                          <span className="text-[#d63638] font-bold">Out of stock (0)</span>
-                        ) : isLowStock ? (
-                          <span className="text-[#b28209] font-bold">
-                            Low stock ({p.stockAvailable})
-                          </span>
-                        ) : (
-                          <span className="text-[#00a32a] font-semibold">
-                            In stock ({p.stockAvailable})
-                          </span>
-                        )}
+                        {renderStockBadge(p.stockAvailable)}
                       </td>
                       <td className="p-2.5 font-bold text-[#1d2327]">
                         ${p.price?.toFixed(2)}
@@ -345,10 +354,11 @@ export default function AdminProductsPage() {
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                               <div className="sm:col-span-2">
-                                <label className="block text-[11px] font-semibold text-gray-700 mb-1">
+                                <label htmlFor="qe-title" className="block text-[11px] font-semibold text-gray-700 mb-1">
                                   Title
                                 </label>
                                 <input
+                                  id="qe-title"
                                   type="text"
                                   value={qeTitle}
                                   onChange={(e) => setQeTitle(e.target.value)}
@@ -357,10 +367,11 @@ export default function AdminProductsPage() {
                               </div>
 
                               <div>
-                                <label className="block text-[11px] font-semibold text-gray-700 mb-1">
+                                <label htmlFor="qe-sku" className="block text-[11px] font-semibold text-gray-700 mb-1">
                                   SKU
                                 </label>
                                 <input
+                                  id="qe-sku"
                                   type="text"
                                   value={qeSku}
                                   onChange={(e) => setQeSku(e.target.value)}
@@ -369,37 +380,40 @@ export default function AdminProductsPage() {
                               </div>
 
                               <div>
-                                <label className="block text-[11px] font-semibold text-gray-700 mb-1">
+                                <label htmlFor="qe-price" className="block text-[11px] font-semibold text-gray-700 mb-1">
                                   Price ($)
                                 </label>
                                 <input
+                                  id="qe-price"
                                   type="number"
                                   step="0.01"
                                   value={qePrice}
-                                  onChange={(e) => setQePrice(parseFloat(e.target.value) || 0)}
+                                  onChange={(e) => setQePrice(Number.parseFloat(e.target.value) || 0)}
                                   className="w-full border border-gray-300 rounded px-2.5 py-1 text-xs outline-none bg-white focus:border-[#2271b1]"
                                 />
                               </div>
 
                               <div>
-                                <label className="block text-[11px] font-semibold text-gray-700 mb-1">
+                                <label htmlFor="qe-stock" className="block text-[11px] font-semibold text-gray-700 mb-1">
                                   Stock Qty
                                 </label>
                                 <input
+                                  id="qe-stock"
                                   type="number"
                                   value={qeStock}
-                                  onChange={(e) => setQeStock(parseInt(e.target.value, 10) || 0)}
+                                  onChange={(e) => setQeStock(Number.parseInt(e.target.value, 10) || 0)}
                                   className="w-full border border-gray-300 rounded px-2.5 py-1 text-xs outline-none bg-white focus:border-[#2271b1]"
                                 />
                               </div>
 
                               <div>
-                                <label className="block text-[11px] font-semibold text-gray-700 mb-1">
+                                <label htmlFor="qe-category" className="block text-[11px] font-semibold text-gray-700 mb-1">
                                   Category
                                 </label>
                                 <select
+                                  id="qe-category"
                                   value={qeCategoryId}
-                                  onChange={(e) => setQeCategoryId(parseInt(e.target.value, 10))}
+                                  onChange={(e) => setQeCategoryId(Number.parseInt(e.target.value, 10))}
                                   className="w-full border border-gray-300 rounded px-2 py-1 text-xs outline-none bg-white"
                                 >
                                   {categories.map((c) => (
@@ -445,8 +459,8 @@ export default function AdminProductsPage() {
                     )}
                   </React.Fragment>
                 );
-              })
-            )}
+              });
+            })()}
           </tbody>
         </table>
       </div>

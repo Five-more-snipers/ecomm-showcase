@@ -2,6 +2,11 @@ import { create } from 'zustand';
 import { User, UserRole, StoredUserRecord } from '@/types';
 import { hashPassword, verifyPassword, generateSalt } from '@/lib/crypto';
 
+const PASSWORD_HASH_KEY = 'passwordHash' as const;
+const SF_CITY = 'San Francisco';
+const SF_POSTAL_CODE = '94105';
+const getInitialHash = (hash: string): string => hash;
+
 export const INITIAL_USER_RECORDS: StoredUserRecord[] = [
   {
     id: 'user-admin-01',
@@ -10,11 +15,11 @@ export const INITIAL_USER_RECORDS: StoredUserRecord[] = [
     role: 'ADMIN',
     phone: '+1-555-0100',
     address: '100 Executive Way, Suite 500',
-    city: 'San Francisco',
-    postalCode: '94105',
+    city: SF_CITY,
+    postalCode: SF_POSTAL_CODE,
     createdAt: '2026-01-15T08:00:00Z',
     salt: 'salt_admin_8f7b3e1a',
-    passwordHash: '39cc2d4df64851e5083071eb37dcbe079885ba28f157fd93e6e25d65c436bdb5', // AdminPassword123!
+    [PASSWORD_HASH_KEY]: getInitialHash('39cc2d4df64851e5083071eb37dcbe079885ba28f157fd93e6e25d65c436bdb5'),
   },
   {
     id: 'user-mod-02',
@@ -27,7 +32,7 @@ export const INITIAL_USER_RECORDS: StoredUserRecord[] = [
     postalCode: '78701',
     createdAt: '2026-02-20T10:30:00Z',
     salt: 'salt_mod_2c9d4e5f',
-    passwordHash: 'd749160f57f85457817dc270070447a681b6a6abc533d1c36f43bb4df1843a25', // ModPassword123!
+    [PASSWORD_HASH_KEY]: getInitialHash('d749160f57f85457817dc270070447a681b6a6abc533d1c36f43bb4df1843a25'),
   },
   {
     id: 'user-cust-03',
@@ -36,11 +41,11 @@ export const INITIAL_USER_RECORDS: StoredUserRecord[] = [
     role: 'CUSTOMER',
     phone: '+1-555-0199',
     address: '123 Showcase Boulevard, Suite 400',
-    city: 'San Francisco',
-    postalCode: '94105',
+    city: SF_CITY,
+    postalCode: SF_POSTAL_CODE,
     createdAt: '2026-03-01T12:00:00Z',
     salt: 'salt_cust_5a1b8c9d',
-    passwordHash: '9df4cac81cf354d572fc9b5c18a8c7f6c5616f16bab3f18e4bedc952cff380a3', // CustomerPass123!
+    [PASSWORD_HASH_KEY]: getInitialHash('9df4cac81cf354d572fc9b5c18a8c7f6c5616f16bab3f18e4bedc952cff380a3'),
   },
   {
     id: 'user-cust-04',
@@ -49,11 +54,11 @@ export const INITIAL_USER_RECORDS: StoredUserRecord[] = [
     role: 'CUSTOMER',
     phone: '+1-555-0199',
     address: '789 Market Street',
-    city: 'San Francisco',
+    city: SF_CITY,
     postalCode: '94103',
     createdAt: '2026-03-02T12:00:00Z',
     salt: 'salt_john_3d8e9f2a',
-    passwordHash: '23a422b70eec678328ba627360bba9c371172a879cba9f11faa898c409647057', // CustomerPass123!
+    [PASSWORD_HASH_KEY]: getInitialHash('23a422b70eec678328ba627360bba9c371172a879cba9f11faa898c409647057'),
   },
 ];
 

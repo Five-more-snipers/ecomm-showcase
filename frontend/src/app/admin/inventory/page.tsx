@@ -222,7 +222,7 @@ export default function AdminInventoryPage() {
                           min="0"
                           value={currentQty}
                           onChange={(e) =>
-                            handleStockInputChange(p.id, parseInt(e.target.value, 10) || 0)
+                            handleStockInputChange(p.id, Number.parseInt(e.target.value, 10) || 0)
                           }
                           className="w-16 border border-[#8c8f94] rounded px-2 py-1 text-xs outline-none bg-white text-center font-bold"
                         />
