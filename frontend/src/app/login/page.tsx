@@ -303,11 +303,12 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+                <label htmlFor="signup-confirm-password" className="block text-xs font-semibold text-gray-300 mb-1.5">
                   Confirm Password
                 </label>
                 <div className="relative">
                   <input
+                    id="signup-confirm-password"
                     type={showPassword ? 'text' : 'password'}
                     required
                     value={confirmPassword}

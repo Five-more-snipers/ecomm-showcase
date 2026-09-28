@@ -61,7 +61,12 @@ export default function CartDrawer() {
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex justify-end">
       {/* Click outside to close */}
-      <div className="flex-1" onClick={closeCart} />
+      <button
+        type="button"
+        aria-label="Close cart"
+        onClick={closeCart}
+        className="flex-1 cursor-default bg-transparent border-0 focus:outline-none"
+      />
 
       {/* Drawer */}
       <div className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col z-50 animate-in slide-in-from-right duration-300">
