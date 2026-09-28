@@ -2,5 +2,6 @@
     "sonarlint.connectedMode.project": {
         "connectionId": "five-more-snipers",
         "projectKey": "Five-more-snipers_ecomm-showcase"
-    }
+    },
+    "java.compile.nullAnalysis.mode": "automatic"
 }

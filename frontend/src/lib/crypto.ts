@@ -11,18 +11,18 @@ const PEPPER = 'ecomm_security_pepper_2026';
  * Generates a cryptographically strong random salt string in hexadecimal format.
  */
 export function generateSalt(length = 16): string {
-  if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+  if (typeof window !== 'undefined' && window.crypto?.getRandomValues) {
     const array = new Uint8Array(length);
     window.crypto.getRandomValues(array);
     return Array.from(array, (b) => b.toString(16).padStart(2, '0')).join('');
   }
   // Fallback for non-browser environments
-  let result = '';
-  const chars = '0123456789abcdef';
-  for (let i = 0; i < length * 2; i++) {
-    result += chars[Math.floor(Math.random() * chars.length)];
+  if (typeof crypto !== 'undefined' && crypto?.getRandomValues) {
+    const array = new Uint8Array(length);
+    crypto.getRandomValues(array);
+    return Array.from(array, (b) => b.toString(16).padStart(2, '0')).join('');
   }
-  return result;
+  throw new Error('Cryptographically secure random number generator is not available.');
 }
 
 /**
@@ -42,9 +42,9 @@ export async function hashPassword(password: string, salt: string): Promise<stri
   // Pure JS fallback in rare environments without subtle crypto
   let hash = 0;
   for (let i = 0; i < message.length; i++) {
-    const char = message.charCodeAt(i);
+    const char = message.codePointAt(i) ?? 0;
     hash = (hash << 5) - hash + char;
-    hash |= 0;
+    hash = Math.trunc(hash);
   }
   return Math.abs(hash).toString(16).padStart(64, '0');
 }
